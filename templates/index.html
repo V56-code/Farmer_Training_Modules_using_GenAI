@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farmer Training Module Generator</title>
+    
+    <!-- Bootstrap CSS for styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom styles for our application */
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #4caf50;
+            --light-color: #f1f8e9;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .header-area {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .card-style {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        
+        .btn-success-custom {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border: none;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .btn-success-custom:hover {
+            background: linear-gradient(to right, #1b5e20, var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .module-output {
+            background-color: white;
+            border-left: 5px solid var(--secondary-color);
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .loading-animation {
+            display: none;
+        }
+        
+        .feature-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-top: 4px solid var(--secondary-color);
+        }
+        
+        .badge-custom {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        /* Animation for loading spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="container py-4">
+        
+        <!-- Header Section -->
+        <div class="header-area text-center">
+            <h1><i class="fas fa-robot"></i> AI Farmer Training Module Generator</h1>
+            <p class="lead">Create personalized farming training modules using artificial intelligence</p>
+            <div class="badge-custom d-inline-block">
+                <i class="fas fa-seedling"></i> Agricultural AI System
+            </div>
+        </div>
+        
+        <!-- Main Content Row -->
+        <div class="row">
+            
+            <!-- Left Column: Input Form -->
+            <div class="col-lg-6">
+                <div class="card card-style">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <i class="fas fa-edit text-success"></i> Create Training Module
+                        </h3>
+                        <p class="text-muted">Enter farming details below to generate a training module</p>
+                        
+                        <!-- Input Form -->
+                        <form id="mainForm">
+                            <!-- Crop Input -->
+                            <div class="mb-3">
+                                <label for="cropInput" class="form-label">
+                                    <strong>Crop Type</strong> <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="cropInput" 
+                                       placeholder="Example: Rice, Wheat, Tomato" required>
+                                <div class="form-text">Enter the main crop you want to learn about</div>
+                            </div>
+                            
+                            <!-- Region Input -->
+                            <div class="mb-3">
+                                <label for="regionInput" class="form-label">
+                                    <strong>Region/State</strong> <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="regionInput" 
+                                       placeholder="Example: Uttar Pradesh, Punjab, Karnataka" required>
+                                <div class="form-text">Enter your farming region for location-specific advice</div>
+                            </div>
+                            
+                            <!-- Problem Input -->
+                            <div class="mb-3">
+                                <label for="problemInput" class="form-label">
+                                    <strong>Problem/Topic</strong> <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" id="problemInput" 
+                                       placeholder="Example: Irrigation, Pest Control, Soil Health" required>
+                                <div class="form-text">What farming challenge do you want to address?</div>
+                            </div>
+                            
+                            <!-- Language Selection -->
+                            <div class="mb-4">
+                                <label for="languageSelect" class="form-label">
+                                    <strong>Language Preference</strong>
+                                </label>
+                                <select class="form-select" id="languageSelect">
+                                    <option value="English">English</option>
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="Telugu">Telugu</option>
+                                    <option value="Marathi">Marathi</option>
+                                    <option value="Tamil">Tamil</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success-custom">
+                                    <i class="fas fa-magic"></i> Generate AI Training Module
+                                </button>
+                                <button type="button" class="btn btn-outline-success" id="loadExampleBtn">
+                                    <i class="fas fa-vial"></i> Load Example Data
+                                </button>
+                            </div>
+                        </form>
+                        
+                        <!-- Loading Animation (Hidden by default) -->
+                        <div class="loading-animation text-center mt-4" id="loadingSection">
+                            <div class="spinner-border text-success spinner" style="width: 3rem; height: 3rem;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <h5 class="mt-3 text-success">AI is Creating Your Module</h5>
+                            <p class="text-muted">Please wait while the system generates your training content...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Features Box -->
+                <div class="feature-box">
+                    <h5><i class="fas fa-star text-success"></i> System Features</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            AI-Powered Content Generation
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Location-Specific Farming Advice
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Multi-Language Support
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-check-circle text-success me-2"></i>
+                            Easy-to-Understand Format
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Right Column: Output Display -->
+            <div class="col-lg-6">
+                <div class="card card-style">
+                    <div class="card-body">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-alt text-success"></i> Generated Module
+                        </h3>
+                        
+                        <!-- Placeholder (Shown initially) -->
+                        <div class="text-center py-5" id="placeholderSection">
+                            <i class="fas fa-file-alt fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Your Training Module Will Appear Here</h5>
+                            <p class="text-muted">Fill the form and click "Generate" to create personalized farming guidance</p>
+                        </div>
+                        
+                        <!-- Output Area (Hidden initially) -->
+                        <div id="outputSection" style="display: none;">
+                            <!-- Module Title -->
+                            <h4 id="moduleTitle" class="text-success"></h4>
+                            <p class="text-muted" id="moduleSubtitle"></p>
+                            
+                            <!-- Module Content -->
+                            <div class="module-output p-3 mt-3" id="moduleContent">
+                                <!-- Content will be inserted here -->
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="mt-4">
+                                <button class="btn btn-outline-success" id="newModuleBtn">
+                                    <i class="fas fa-redo"></i> Create New Module
+                                </button>
+                                <button class="btn btn-outline-primary ms-2" onclick="window.print()">
+                                    <i class="fas fa-print"></i> Print Module
+                                </button>
+                                <button class="btn btn-outline-info ms-2" id="copyTextBtn">
+                                    <i class="fas fa-copy"></i> Copy Text
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- How It Works Box -->
+                <div class="feature-box">
+                    <h5><i class="fas fa-info-circle text-success"></i> How It Works</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Technology Used</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-code text-success"></i> Python Flask Backend</li>
+                                <li><i class="fas fa-brain text-success"></i> AI Content Generation</li>
+                                <li><i class="fas fa-database text-success"></i> Farming Knowledge Base</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Benefits</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-chart-line text-success"></i> Personalized Training</li>
+                                <li><i class="fas fa-clock text-success"></i> Saves Time</li>
+                                <li><i class="fas fa-graduation-cap text-success"></i> Easy to Understand</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center mt-5 pt-3 border-top">
+            <p class="text-muted">AI Farmer Training Module Generator | Demo System</p>
+        </footer>
+    </div>
+    
+    <!-- JavaScript Code -->
+    <script>
+        // Wait for page to load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded successfully');
+            
+            // Get all elements we need
+            const mainForm = document.getElementById('mainForm');
+            const loadingSection = document.getElementById('loadingSection');
+            const placeholderSection = document.getElementById('placeholderSection');
+            const outputSection = document.getElementById('outputSection');
+            const loadExampleBtn = document.getElementById('loadExampleBtn');
+            const newModuleBtn = document.getElementById('newModuleBtn');
+            const copyTextBtn = document.getElementById('copyTextBtn');
+            
+            // Focus on first input field
+            document.getElementById('cropInput').focus();
+            
+            // ==================== FORM SUBMISSION ====================
+            mainForm.addEventListener('submit', async function(event) {
+                // Prevent page from reloading
+                event.preventDefault();
+                
+                // Get values from form
+                const crop = document.getElementById('cropInput').value.trim();
+                const region = document.getElementById('regionInput').value.trim();
+                const problem = document.getElementById('problemInput').value.trim();
+                const language = document.getElementById('languageSelect').value;
+                
+                // Validate inputs
+                if (!crop || !region || !problem) {
+                    alert('Please fill in all required fields: Crop, Region, and Problem');
+                    return;
+                }
+                
+                console.log('Form submitted with:', { crop, region, problem, language });
+                
+                // Show loading, hide other sections
+                loadingSection.style.display = 'block';
+                placeholderSection.style.display = 'none';
+                outputSection.style.display = 'none';
+                
+                try {
+                    // Send request to backend
+                    const response = await fetch('/generate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            crop: crop,
+                            region: region,
+                            problem: problem,
+                            language: language
+                        })
+                    });
+                    
+                    console.log('Response received:', response.status, response.statusText);
+                    
+                    // Check if response is OK
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    // Parse JSON response
+                    const result = await response.json();
+                    console.log('Parsed result:', result);
+                    
+                    // Check if generation was successful
+                    if (!result.success) {
+                        throw new Error(result.error || 'Failed to generate module');
+                    }
+                    
+                    // Hide loading section
+                    loadingSection.style.display = 'none';
+                    
+                    // Show output section
+                    outputSection.style.display = 'block';
+                    
+                    // Update module title and subtitle
+                    document.getElementById('moduleTitle').textContent = 
+                        result.data.title || 'Training Module';
+                    document.getElementById('moduleSubtitle').textContent = 
+                        result.data.subtitle || '';
+                    
+                    // Format and display content
+                    const contentElement = document.getElementById('moduleContent');
+                    contentElement.innerHTML = '';
+                    
+                    // Create a pre element to preserve formatting
+                    const preElement = document.createElement('pre');
+                    preElement.style.whiteSpace = 'pre-wrap';
+                    preElement.style.fontFamily = 'inherit';
+                    preElement.textContent = result.data.content || 'No content generated';
+                    
+                    contentElement.appendChild(preElement);
+                    
+                    // Add metadata if available
+                    if (result.system_info) {
+                        const metadataDiv = document.createElement('div');
+                        metadataDiv.className = 'metadata mt-3 p-2 bg-light rounded';
+                        metadataDiv.innerHTML = `
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Generated: ${result.system_info.generated_at || 'Just now'} | 
+                                AI Assistance: ${result.system_info.ai_assistance ? 'Yes' : 'No'}
+                            </small>
+                        `;
+                        contentElement.appendChild(metadataDiv);
+                    }
+                    
+                    console.log('Module displayed successfully');
+                    
+                } catch (error) {
+                    // Hide loading section
+                    loadingSection.style.display = 'none';
+                    
+                    // Show placeholder again
+                    placeholderSection.style.display = 'block';
+                    
+                    // Show error message
+                    console.error('Error details:', error);
+                    alert('Error: ' + error.message + '\n\nPlease try again or check your connection.');
+                }
+            });
+            
+            // ==================== LOAD EXAMPLE DATA ====================
+            loadExampleBtn.addEventListener('click', function() {
+                // Example data for demonstration
+                const examples = [
+                    { crop: 'Rice', region: 'Uttar Pradesh', problem: 'Irrigation', language: 'English' },
+                    { crop: 'Wheat', region: 'Punjab', problem: 'Pest Control', language: 'Hindi' },
+                    { crop: 'Tomato', region: 'Karnataka', problem: 'Soil Health', language: 'English' }
+                ];
+                
+                // Pick a random example
+                const example = examples[Math.floor(Math.random() * examples.length)];
+                
+                // Fill form with example data
+                document.getElementById('cropInput').value = example.crop;
+                document.getElementById('regionInput').value = example.region;
+                document.getElementById('problemInput').value = example.problem;
+                document.getElementById('languageSelect').value = example.language;
+                
+                alert(`Loaded example: ${example.crop} farming in ${example.region} (${example.problem})`);
+            });
+            
+            // ==================== CREATE NEW MODULE ====================
+            newModuleBtn.addEventListener('click', function() {
+                // Hide output, show placeholder
+                outputSection.style.display = 'none';
+                placeholderSection.style.display = 'block';
+                
+                // Clear form (optional - you can keep or clear values)
+                // document.getElementById('cropInput').value = '';
+                // document.getElementById('regionInput').value = '';
+                // document.getElementById('problemInput').value = '';
+                
+                // Focus on first input
+                document.getElementById('cropInput').focus();
+            });
+            
+            // ==================== COPY TEXT BUTTON ====================
+            copyTextBtn.addEventListener('click', function() {
+                const contentElement = document.getElementById('moduleContent');
+                const textToCopy = contentElement.textContent || contentElement.innerText;
+                
+                // Use Clipboard API if available
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(textToCopy)
+                        .then(() => {
+                            alert('Module text copied to clipboard!');
+                        })
+                        .catch(err => {
+                            console.error('Copy failed:', err);
+                            alert('Could not copy text. Please try selecting and copying manually.');
+                        });
+                } else {
+                    // Fallback for older browsers
+                    const textArea = document.createElement('textarea');
+                    textArea.value = textToCopy;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    alert('Module text copied to clipboard!');
+                }
+            });
+            
+            // ==================== CHECK BACKEND HEALTH ====================
+            // Optional: Check if backend is running
+            async function checkBackendHealth() {
+                try {
+                    const response = await fetch('/health');
+                    if (response.ok) {
+                        console.log('Backend is healthy and ready');
+                    }
+                } catch (error) {
+                    console.warn('Backend health check failed:', error);
+                }
+            }
+            
+            // Run health check
+            checkBackendHealth();
+        });
+    </script>
+    
+    <!-- Bootstrap JavaScript (for components if needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
